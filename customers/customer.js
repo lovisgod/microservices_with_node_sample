@@ -1,37 +1,36 @@
  const express = require('express');
  const mongoose = require('mongoose');
  const bodyParser = require('body-parser');
- require('./BookModel');
+ require('./CustomerModel');
 
 
  // create an instance for the book model
- const Book = mongoose.model("Book");
+ const Customer = mongoose.model("Customer");
 
 
 
  const app = express();
 
- app.use(bodyParser.json())
  app.use(express.json());
 
- mongoose.connect("mongodb://localhost:27017/bookservicedb", {
+ mongoose.connect("mongodb://localhost:27017/customerservicedb", {
      useUnifiedTopology: true,
      useNewUrlParser: true
  }, () => {
-     console.log('database connected');
+     console.log('database connected for customer service');
  });
 
  app.get('/', (req, res) => {
-     res.send('this is first endpoint in the book section');
+     res.send('this is first endpoint in the customer section');
  })
 
- app.post('/book', async (req, res) => {
+ app.post('/customer', async (req, res) => {
      try {
-        var book =  {...req.body}
-     var toBook = await new Book(book);
-     const response = await toBook.save()
+        var customer =  {...req.body}
+     var toCustomer = await new Customer(customer);
+     const response = await toCustomer.save()
      await res.send({
-       message: "Book created",
+       message: "Customer created",
        data: response._doc
    })  
      } catch (error) {
@@ -43,12 +42,12 @@
     
  });
 
- app.get('/books', async (req, res) => {
+ app.get('/customers', async (req, res) => {
      try {
-        const books = await Book.find({});
+        const customers = await Customer.find({});
         res.send({
             message: "list fetched successfully",
-            data: books
+            data: customers
         });
      } catch (error) {
         console.log(error);
@@ -59,18 +58,18 @@
      
  });
 
- app.get('/books/:id', async (req, res) => {
+ app.get('/customer/:id', async (req, res) => {
     try {
         const id = req.params.id;
-       const book = await Book.findById(id);
-       if (book) {
+       const customer = await Customer.findById(id);
+       if (customer) {
         res.send({
-            message: "book fetched successfully",
-            data: book
+            message: "Profile fetched successfully",
+            data: customer
         });
        } else {
            res.status(404).send ( {
-            message: "Book not found"
+            message: "Profile not found"
            })
        }
        
@@ -83,18 +82,19 @@
     
 });
 
-app.delete('/book/:id', async (req, res) => {
+app.delete('/customer/:id', async (req, res) => {
     try {
         const id = req.params.id;
-        const deleted = await Book.findOneAndRemove(id);
+        console.log(id);
+        const deleted = await Customer.findOneAndRemove(id);
         console.log(deleted)
         if (deleted) {
             res.send({
-                message: "Book deleted successfully"
+                message: "Profile deleted successfully"
             })
         } else {
             res.status(404).send({
-                message:"document not found"
+                message:"Profile not found"
             })
         }
     } catch (error) {
@@ -105,6 +105,6 @@ app.delete('/book/:id', async (req, res) => {
     }
 })
 
- app.listen(4545, () => {
+ app.listen(5555, () => {
      console.log('book server up and running');
  })
