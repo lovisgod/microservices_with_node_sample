@@ -14,7 +14,7 @@
 
  app.use(express.json());
 
- mongoose.connect("mongodb://localhost:27017/orderservicedb", {
+ mongoose.connect("mongodb://host.docker.internal:27017/orderservicedb", {
      useUnifiedTopology: true,
      useNewUrlParser: true
  }, () => {
